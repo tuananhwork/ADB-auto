@@ -1,0 +1,57 @@
+/* Base Splitter Styles */
+.splitter {
+  flex-shrink: 0;
+  background-color: #3c3c3c;
+  position: relative;
+  z-index: 10;
+  transition: background-color 0.2s ease;
+}
+
+/* Vertical Splitter (divides horizontally) */
+.splitter--vertical {
+  width: 4px;
+  cursor: col-resize;
+  min-width: 4px;
+}
+
+.splitter--vertical::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+}
+
+/* Horizontal Splitter (divides vertically) */
+.splitter--horizontal {
+  height: 4px;
+  cursor: row-resize;
+  min-height: 4px;
+  width: 100%;
+}
+
+.splitter--horizontal::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+}
+
+/* Hover and Active States */
+.splitter:hover,
+.splitter--active {
+  background-color: #007acc;
+}
+
+.splitter:focus {
+  outline: none;
+  background-color: #007acc;
+}
+
+/* Prevent text selection while dragging */
+.splitter--active {
+  user-select: none;
+}

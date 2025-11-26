@@ -1,66 +1,87 @@
 import React from 'react';
 import { useResizable } from 'react-resizable-layout';
-import { cn } from '../utils/cn';
-import SampleSplitter from './SampleSplitter';
+import Splitter from './Splitter';
 import Explorer from './Explorer';
 import StepsLibrary from './StepsLibrary';
 import Terminal from './Terminal';
 import TestCaseEditor from './TestCaseEditor';
+import '../styles/IdeClone.css';
 
 const IdeClone = () => {
+  // Terminal panel (bottom)
   const {
     isDragging: isTerminalDragging,
-    position: terminalH,
-    splitterProps: terminalDragBarProps,
+    position: terminalHeight,
+    splitterProps: terminalSplitterProps,
   } = useResizable({
     axis: 'y',
-    initial: 150,
-    min: 50,
+    initial: 200,
+    min: 100,
+    max: 600,
     reverse: true,
   });
 
+  // Explorer panel (left)
   const {
-    isDragging: isFileDragging,
-    position: fileW,
-    splitterProps: fileDragBarProps,
+    isDragging: isExplorerDragging,
+    position: explorerWidth,
+    splitterProps: explorerSplitterProps,
+  } = useResizable({
+    axis: 'x',
+    initial: 280,
+    min: 150,
+    max: 500,
+  });
+
+  // Steps Library panel (right)
+  const {
+    isDragging: isStepsDragging,
+    position: stepsWidth,
+    splitterProps: stepsSplitterProps,
   } = useResizable({
     axis: 'x',
     initial: 250,
-    min: 50,
-  });
-
-  const {
-    isDragging: isPluginDragging,
-    position: pluginW,
-    splitterProps: pluginDragBarProps,
-  } = useResizable({
-    axis: 'x',
-    initial: 200,
-    min: 50,
+    min: 150,
+    max: 500,
     reverse: true,
   });
 
   return (
-    <div className={'flex flex-column h-screen bg-dark font-mono color-white overflow-hidden'}>
-      <div className={'flex grow'}>
-        <div className={cn('shrink-0 contents', isFileDragging && 'dragging')} style={{ width: fileW }}>
+    <div className="flex flex-column h-screen bg-dark font-mono color-white overflow-hidden">
+      {/* Main content area */}
+      <div className="flex grow">
+        {/* Explorer Panel */}
+        <div className={`shrink-0 ${isExplorerDragging ? 'panel-dragging' : ''}`} style={{ width: explorerWidth }}>
           <Explorer />
         </div>
-        <SampleSplitter isDragging={isFileDragging} {...fileDragBarProps} />
-        <div className={'flex grow'}>
-          <div className={'grow bg-darker contents'}>
+
+        {/* Splitter for Explorer */}
+        <Splitter orientation="vertical" isDragging={isExplorerDragging} {...explorerSplitterProps} />
+
+        {/* Center content area */}
+        <div className="flex grow">
+          {/* Test Case Editor */}
+          <div className="grow bg-darker">
             <TestCaseEditor />
           </div>
-          <SampleSplitter isDragging={isPluginDragging} {...pluginDragBarProps} />
-          <div className={cn('shrink-0 contents', isPluginDragging && 'dragging')} style={{ width: pluginW }}>
+
+          {/* Splitter for Steps Library */}
+          <Splitter orientation="vertical" isDragging={isStepsDragging} {...stepsSplitterProps} />
+
+          {/* Steps Library Panel */}
+          <div className={`shrink-0 ${isStepsDragging ? 'panel-dragging' : ''}`} style={{ width: stepsWidth }}>
             <StepsLibrary />
           </div>
         </div>
       </div>
-      <SampleSplitter dir={'horizontal'} isDragging={isTerminalDragging} {...terminalDragBarProps} />
+
+      {/* Horizontal Splitter for Terminal */}
+      <Splitter orientation="horizontal" isDragging={isTerminalDragging} {...terminalSplitterProps} />
+
+      {/* Terminal Panel */}
       <div
-        className={cn('shrink-0 bg-darker contents', isTerminalDragging && 'dragging')}
-        style={{ height: terminalH }}
+        className={`shrink-0 bg-darker ${isTerminalDragging ? 'panel-dragging' : ''}`}
+        style={{ height: terminalHeight }}
       >
         <Terminal />
       </div>
